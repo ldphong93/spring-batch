@@ -1,31 +1,44 @@
 package com.present.batch;
 
+import com.opencsv.bean.CsvBindByPosition;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
+@Builder
+@ToString
 @AllArgsConstructor
 public class Person {
-  private String lastName;
-  private String firstName;
-  private Integer birthYear;
-  private String zodiacSign;
 
-  public Person() {
-    this.zodiacSign = "Unknown";
-  }
+    @CsvBindByPosition(position = 0)
+    private String lastName;
 
-  public Person(String firstName, String lastName, Integer birthYear) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.birthYear = birthYear;
-  }
+    @CsvBindByPosition(position = 1)
+    private String firstName;
 
-  @Override
-  public String toString() {
-    return "FirstName: " + firstName + ", LastName: " + lastName + ", ZodiacSign: " + zodiacSign;
-  }
+    @CsvBindByPosition(position = 2)
+    private String birthDay;
 
+    @CsvBindByPosition(position = 3)
+    private Integer birthYear;
+
+    @CsvBindByPosition(position = 4)
+    private String zodiacSign;
+
+    public Person() {
+        this.zodiacSign = "Unknown";
+    }
+
+    public Person(String firstName, String lastName, Integer birthYear) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthYear = birthYear;
+    }
 }

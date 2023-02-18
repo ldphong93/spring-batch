@@ -8,24 +8,24 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Person {
-  private String lastName;
-  private String firstName;
-  private Integer birthYear;
-  private String zodiacSign;
+    private String lastName;
+    private String firstName;
+    private Integer birthYear;
+    private String zodiacSign;
 
-  public Person() {
-    this.zodiacSign = "Unknown";
-  }
+    public Person() {
+        this.zodiacSign = "Unknown";
+    }
 
-  public Person(String firstName, String lastName, Integer birthYear) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.birthYear = birthYear;
-  }
+    public Person(String firstName, String lastName, Integer birthYear) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthYear = birthYear;
+    }
 
-  @Override
-  public String toString() {
-    return "FirstName: " + firstName + ", LastName: " + lastName + ", ZodiacSign: " + zodiacSign;
-  }
+    @Override
+    public String toString() {
+        return "FirstName: " + firstName + ", LastName: " + lastName + ", ZodiacSign: " + zodiacSign;
+    }
 
 }

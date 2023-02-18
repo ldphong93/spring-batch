@@ -1,6 +1,5 @@
 package com.present.batch;
 
-import java.time.Instant;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -14,30 +13,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
+
 @RestController
 public class BatchController {
 
-  @Autowired
-  private JobLauncher jobLauncher;
+    @Autowired
+    private JobLauncher jobLauncher;
 
-  @Autowired
-  private Job importUserJob;
+    @Autowired
+    private Job importUserJob;
 
-  @GetMapping("/invokeJob")
-  public BatchStatus runJob() {
-    BatchStatus status = null;
+    @GetMapping("/invokeJob")
+    public BatchStatus runJob() {
+        BatchStatus status = null;
 
-    JobParameters parameters = new JobParametersBuilder()
-        .addString("time", Instant.now().toString()).toJobParameters();
+        JobParameters parameters = new JobParametersBuilder()
+              .addString("time", Instant.now().toString()).toJobParameters();
 
-    try {
-      status = jobLauncher.run(importUserJob, parameters).getStatus();
+        try {
+            status = jobLauncher.run(importUserJob, parameters).getStatus();
 
-    } catch (JobExecutionAlreadyRunningException | JobRestartException |
-             JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
-      throw new RuntimeException(e);
+        } catch (JobExecutionAlreadyRunningException | JobRestartException |
+                 JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
+            throw new RuntimeException(e);
+        }
+
+        return status;
     }
-
-    return status;
-  }
 }

@@ -1,4 +1,4 @@
-package com.present.batch;
+package com.present.batch.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -16,7 +16,7 @@ public class ItemReader {
     public FlatFileItemReader<Person> read() throws Exception {
         return new FlatFileItemReaderBuilder<Person>()
             .name("personFlatFileReader")
-            .resource(new ClassPathResource("sample-data.csv"))
+            .resource(new ClassPathResource("sample-data-retry.csv"))
             .delimited()
             .names(new String[]{"firstName", "lastName", "birthYear"})
             .fieldSetMapper(fieldSet -> {

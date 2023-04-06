@@ -11,15 +11,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
+public class JobCompletionListener extends JobExecutionListenerSupport {
 
-    private static final Logger log = LoggerFactory.getLogger(
-        JobCompletionNotificationListener.class);
+    private static final Logger log = LoggerFactory.getLogger(JobCompletionListener.class);
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JobCompletionNotificationListener(JdbcTemplate jdbcTemplate) {
+    public JobCompletionListener(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -26,8 +26,7 @@ public class Person {
 
     @Override
     public String toString() {
-        return "FirstName: " + firstName + ", LastName: " + lastName + ", ZodiacSign: "
-            + zodiacSign;
+        return "FirstName: " + firstName + ", LastName: " + lastName + ", ZodiacSign: " + zodiacSign;
     }
 
 }

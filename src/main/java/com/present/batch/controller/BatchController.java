@@ -29,6 +29,7 @@ public class BatchController {
 
         JobParameters parameters = new JobParametersBuilder()
             .addString("time", Instant.now().toString()).toJobParameters();
+//            .addString("time", String.valueOf((LocalDateTime.now().getDayOfMonth()))).toJobParameters();
 
         try {
             status = jobLauncher.run(importUserJob, parameters).getStatus();

@@ -2,21 +2,28 @@ package com.present.batch.processor;
 
 import com.present.batch.entity.Person;
 import com.present.batch.exception.InvalidPersonException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 public class PersonItemProcessor implements ItemProcessor<Person, Person> {
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     private static final Logger log = LoggerFactory.getLogger(PersonItemProcessor.class);
+
+    public static int counter = 0;
 
     @Override
     public Person process(final Person person) throws Exception {
@@ -24,6 +31,28 @@ public class PersonItemProcessor implements ItemProcessor<Person, Person> {
         List<String> validateResults = this.validatePerson(person);
         if (!validateResults.isEmpty()) {
             throw new InvalidPersonException("Invalid person!!!", validateResults);
+        }
+
+        //retry
+//        PersonItemProcessor.counter += 1;
+//        if (PersonItemProcessor.counter < 3) {
+//            throw new TimeoutException("Timeout Exception");
+//        }
+
+        //restart
+        PersonItemProcessor.counter += 1;
+        if (PersonItemProcessor.counter == 3) {
+            throw new TimeoutException("Timeout Exception");
+        }
+
+        if (PersonItemProcessor.counter == 4) {
+            jdbcTemplate.query("SELECT last_name, first_name, birth_year, zodiac_sign FROM people",
+                (rs, row) -> new Person(
+                    rs.getString(1),
+                    rs.getString(2),
+                    rs.getInt(3),
+                    rs.getString(4))
+            ).forEach(p -> log.info("Found <" + p + "> in the database."));
         }
 
         Person transformedPerson = turnUpperCase(person);

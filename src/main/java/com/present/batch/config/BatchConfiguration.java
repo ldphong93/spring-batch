@@ -1,10 +1,10 @@
 package com.present.batch.config;
 
 import com.present.batch.entity.Person;
-import com.present.batch.exception.InvalidPersonException;
-import com.present.batch.listener.JobCompletionNotificationListener;
-import com.present.batch.listener.PersonErrorListener;
+import com.present.batch.listener.JobCompletionListener;
+import com.present.batch.listener.PersonSkipListener;
 import com.present.batch.processor.PersonItemProcessor;
+import java.util.concurrent.TimeoutException;
 import javax.sql.DataSource;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -35,7 +35,7 @@ public class BatchConfiguration {
     public FlatFileItemReader<Person> reader;
 
     @Bean
-    public Job importUserJob(JobCompletionNotificationListener listener, Step step1) {
+    public Job importUserJob(JobCompletionListener listener, Step step1) {
         return jobBuilderFactory.get("importUserJob")
             .listener(listener)
             .flow(step1)
@@ -50,8 +50,22 @@ public class BatchConfiguration {
             .reader(reader)
             .processor(processor())
             .writer(writer)
-            .faultTolerant().skip(InvalidPersonException.class).skipLimit(3)
-            .listener(new PersonErrorListener())
+
+            //skip
+            .faultTolerant()
+            .skip(TimeoutException.class).skipLimit(5)
+            .listener(new PersonSkipListener())
+
+            //re-try
+            //re-try limit can be interpreted as maximum number of job run
+//            .faultTolerant()
+//            .retryLimit(3)
+//            .retry(TimeoutException.class)
+//            .listener(new PersonRetryListener())
+
+            //restart
+//            .startLimit(5)
+
             .build();
     }
 
@@ -70,3 +84,4 @@ public class BatchConfiguration {
             .build();
     }
 }
+
